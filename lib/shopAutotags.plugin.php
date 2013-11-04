@@ -19,13 +19,16 @@ class shopAutotagsPlugin extends shopPlugin
             return false;
         }
         
+        $domain = wa()->getRouting()->getDomain(null, true);        
         $params = array('meta_title','meta_keywords','meta_description');
         $apply_templates = $this->getSettings('apply_templates');
         
-
-        $vals=array();
+        $autotags_model = new shopAutotagsModel();
+        $autotags = $autotags_model->getByField(array('domain'=>$domain, 'type'=>$type));
+        
+        $vals=array();  
         foreach($params as $param) {
-            $tpl = $this->getSettings($type.'_'.$param);
+            $tpl = $autotags[$param];
             $vals[$param] = $this->{$type.'ReplaceTpl'}($tpl,$item);
         }
 

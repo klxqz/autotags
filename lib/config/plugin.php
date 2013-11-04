@@ -4,7 +4,7 @@ return array(
     'name' => 'Автотеги',
     'description' => 'Автоматическое заполнение мета-тегов',
     'vendor'=>903438,
-    'version'=>'1.0.1',
+    'version'=>'1.0.2',
     'img'=>'img/autotags.png',
     'shop_settings' => true,
     'frontend'    => true,
