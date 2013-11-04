@@ -1,0 +1,131 @@
+
+<div class="block double-padded">
+<h1>Автотеги</h1>
+<div     class="fields form">
+    <form action = "?module=plugins&id=autotags&action=save" method="post" id="plugins-settings-form">
+    {$wa->csrf()}
+    
+    <div class="field">
+        <div class="name">
+            Статус
+        </div>
+        <div class="value">
+        <select name="shop_autotags[status]">
+        <option {if $vals.status == 1} selected="selected"{/if} value = "1">Включен</option>
+        <option {if $vals.status == 0} selected="selected"{/if} value = "0">Выключен</option>
+        </select>
+
+        </div>
+    </div>
+    
+    <div class="field">
+        <div class="name">
+            Применять шаблоны
+        </div>
+        <div class="value">
+        <select name="shop_autotags[apply_templates]">
+        <option {if $vals.apply_templates == 1} selected="selected"{/if} value = "1">Для всех мета-тегов</option>
+        <option {if $vals.apply_templates == 0} selected="selected"{/if} value = "0">Только для незаполненных мета-тегов</option>
+        </select>
+
+        </div>
+    </div>
+    
+    <br />
+    <h2>Страница товара</h2>
+    {literal}
+    Шаблоны:
+    <div>{product_name} - название товара</div>
+    <div>{product_summary} - краткое описание товара</div>
+    <div>{product_description} - полное описание товара</div>
+    <div>{product_price} - цена товара</div>
+    <div>{product_min_price} - минимальная цена товара</div>
+    <div>{product_max_price} - максимальная цена товара</div>
+    <div>{product_compare_price} - зачеркнутая цена товара</div>
+    <div>{product_count} - количество товара</div>
+    <div>{category_name} - название родительской категории</div>
+    <div>{category_description} - описание родительской категории</div>
+    {/literal}
+    <br />
+
+    <div class="field">
+        <div class="name">
+            META Title
+        </div>
+        <div class="value">
+        <input id="s-product-meta-title" class="long" name="shop_autotags[product_meta_title]" value="{$vals.product_meta_title|escape}" />
+        </div>
+    </div>
+    
+    <div class="field">
+        <div class="name">
+            META Keywords
+        </div>
+        <div class="value">
+        <textarea name="shop_autotags[product_meta_keywords]">{$vals.product_meta_keywords|escape}</textarea>
+        </div>
+    </div>
+    
+    <div class="field">
+        <div class="name">
+            META Description
+        </div>
+        <div class="value">
+        <textarea name="shop_autotags[product_meta_description]">{$vals.product_meta_description|escape}</textarea>
+   
+        </div>
+    </div>
+    
+    <br />
+    <h2>Страница категории</h2>
+    
+    {literal}
+    Шаблоны:
+    <div>{category_name} - название категории</div>
+    <div>{category_description} - описание категории</div>
+    {/literal}
+    <br />
+    <div class="field">
+        <div class="name">
+            META Title
+        </div>
+        <div class="value">
+        <input id="s-product-meta-title" class="long" name="shop_autotags[category_meta_title]" value="{$vals.category_meta_title|escape}" />
+        </div>
+    </div>
+    
+    <div class="field">
+        <div class="name">
+            META Keywords
+        </div>
+        <div class="value">
+        <textarea name="shop_autotags[category_meta_keywords]">{$vals.category_meta_keywords|escape}</textarea>
+        </div>
+    </div>
+    
+    <div class="field">
+        <div class="name">
+            META Description
+        </div>
+        <div class="value">
+        <textarea name="shop_autotags[category_meta_description]">{$vals.category_meta_description|escape}</textarea>
+   
+        </div>
+    </div>
+
+
+    
+
+    
+    <div class="field">
+        <div class="value submit">
+            <input type="submit" class="button green" value="Сохранить" />
+            <span id="plugins-settings-form-status" style="display:none">
+                <i style="vertical-align:middle" class="icon16 yes"></i> [`Saved`]
+            </span>
+        </div>
+    </div>
+    </form>
+</div>
+</div>
+
