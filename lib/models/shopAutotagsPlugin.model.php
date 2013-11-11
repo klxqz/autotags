@@ -1,6 +1,6 @@
 <?php
 
-class shopAutotagsModel extends waModel
+class shopAutotagsPluginModel extends waModel
 {
     protected $table = 'shop_autotags';
     

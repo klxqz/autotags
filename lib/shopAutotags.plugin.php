@@ -23,7 +23,7 @@ class shopAutotagsPlugin extends shopPlugin
         $params = array('meta_title','meta_keywords','meta_description');
         $apply_templates = $this->getSettings('apply_templates');
         
-        $autotags_model = new shopAutotagsModel();
+        $autotags_model = new shopAutotagsPluginModel();
         $autotags = $autotags_model->getByField(array('domain'=>$domain, 'type'=>$type));
         
         $vals=array();  

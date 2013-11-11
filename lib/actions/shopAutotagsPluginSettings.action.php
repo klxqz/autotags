@@ -10,7 +10,7 @@ class shopAutotagsPluginSettingsAction extends waViewAction
         $routing = wa()->getRouting();
         $domains = $routing->getDomains();
         
-        $autotags_model = new shopAutotagsModel();
+        $autotags_model = new shopAutotagsPluginModel();
         $result = $autotags_model->getAll();
         $meta_tags = array();
 		foreach($domains as $domain) {

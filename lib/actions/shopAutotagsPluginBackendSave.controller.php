@@ -16,7 +16,7 @@ class shopAutotagsPluginBackendSaveController extends waJsonController
                 $app_settings_model->set(array('shop', 'autotags'), $name, $value);
             }
             
-            $autotags_model = new shopAutotagsModel();
+            $autotags_model = new shopAutotagsPluginModel();
             foreach($meta_tags as $domain => $type_tags) {
                 foreach($type_tags as $type => $meta_tags) {
                     $data = array('domain'=>$domain, 'type'=>$type);
@@ -35,7 +35,7 @@ class shopAutotagsPluginBackendSaveController extends waJsonController
             }
 
 
-            $this->response['message'] = "Ñîõğàíåíî";
+            $this->response['message'] = "Ğ¡Ğ¾Ñ…Ñ€Ğ°Ğ½ĞµĞ½Ğ¾";
         } catch (Exception $e) {
             $this->setError($e->getMessage());
         }
