@@ -1,121 +1,175 @@
+<style>
+    .helper{
+        display: none;
+    }
+    .plugin-menu{
+        float: right;
+        list-style: none;
+    }
+
+    .plugin-menu li{
+        float: left;
+        margin-left: 10px;
+    }
+</style>
+
+<ul class="plugin-menu">
+    <li><a target="_blank" href="http://www.webasyst.ru/store/plugin/shop/autotags/reviews/">Оставить отзыв о плагине</a></li>
+    <li><a href="mailto:support@wa-plugins.ru">Поддержка разработчика плагина</a></li>
+    <li><a target="_blank" href="http://wa-plugins.ru/">WA-PLUGINS.ru - сайт разработчика</a></li>
+</ul>
 
 <div class="block double-padded">
-<h1>Автотеги</h1>
-<div     class="fields form">
-    <form action = "?plugin=autotags&action=save" method="post" id="plugins-settings-form">
-    {$wa->csrf()}
-    
-    <div class="field">
-        <div class="name">
-            Статус
-        </div>
-        <div class="value">
-        <select name="shop_autotags[status]">
-        <option {if $settings.status == 1} selected="selected"{/if} value = "1">Включен</option>
-        <option {if $settings.status == 0} selected="selected"{/if} value = "0">Выключен</option>
-        </select>
+    <h1>Автотеги</h1>
+    <div     class="fields form">
+        <form action = "?plugin=autotags&action=save" method="post" id="plugins-settings-form">
+            {$wa->csrf()}
 
-        </div>
-    </div>
-    
-    <div class="field">
-        <div class="name">
-            Применять шаблоны
-        </div>
-        <div class="value">
-        <select name="shop_autotags[apply_templates]">
-        <option {if $settings.apply_templates == 1} selected="selected"{/if} value = "1">Для всех мета-тегов</option>
-        <option {if $settings.apply_templates == 0} selected="selected"{/if} value = "0">Только для незаполненных мета-тегов</option>
-        </select>
+            <div class="field">
+                <div class="name">
+                    Статус
+                </div>
+                <div class="value">
+                    <select name="shop_autotags[status]">
+                        <option {if $settings.status == 1} selected="selected"{/if} value = "1">Включен</option>
+                        <option {if $settings.status == 0} selected="selected"{/if} value = "0">Выключен</option>
+                    </select>
 
-        </div>
-    </div>
-    
-    <br /><br /><br />
-    
-        {literal}
-    <b>Шаблоны для страницы товара:</b>
-    <div>{product_name} - название товара</div>
-    <div>{product_summary} - краткое описание товара</div>
-    <div>{product_description} - полное описание товара</div>
-    <div>{product_price} - цена товара</div>
-    <div>{product_min_price} - минимальная цена товара</div>
-    <div>{product_max_price} - максимальная цена товара</div>
-    <div>{product_compare_price} - зачеркнутая цена товара</div>
-    <div>{product_count} - количество товара</div>
-    <div>{category_name} - название родительской категории</div>
-    <div>{category_description} - описание родительской категории</div>
-    {/literal}
-    <br />
-    
-    {literal}
-    <b>Шаблоны для страницы категории:</b>
-    <div>{category_name} - название категории</div>
-    <div>{category_description} - описание категории</div>
-    {/literal}
-    <br />
-    
-    {foreach from=$meta_tags key=domain item=meta_type}
-    <h1>Поселение: {$domain}</h1>
-    
-    
-    {foreach from=$meta_type key=type item=meta_tag}
-    
-    {if $type=='product'}
-        <h2>Страница товара</h2>
-    {elseif $type=='category'}
-        <h2>Страница категории</h2>
-    {/if}
-    
-    <div class="field">
-        <div class="name">
-            META Title
-        </div>
-        <div class="value">
-        <input class="long" name="meta_tags[{$domain}][{$type}][meta_title]" value="{$meta_tag.meta_title|escape}" />
-        </div>
-    </div>
-    
-    <div class="field">
-        <div class="name">
-            META Keywords
-        </div>
-        <div class="value">
-        <textarea name="meta_tags[{$domain}][{$type}][meta_keywords]">{$meta_tag.meta_keywords|escape}</textarea>
-        </div>
-    </div>
-    
-    <div class="field">
-        <div class="name">
-            META Description
-        </div>
-        <div class="value">
-        <textarea name="meta_tags[{$domain}][{$type}][meta_description]">{$meta_tag.meta_description|escape}</textarea>
-   
-        </div>
-    </div>
-    
-    <br />
-    {/foreach}
-   
-    <hr />
-    {/foreach}
-    
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="name">
+                    Применять шаблоны
+                </div>
+                <div class="value">
+                    <select name="shop_autotags[apply_templates]">
+                        <option {if $settings.apply_templates == 1} selected="selected"{/if} value = "1">Для всех мета-тегов</option>
+                        <option {if $settings.apply_templates == 0} selected="selected"{/if} value = "0">Только для незаполненных мета-тегов</option>
+                    </select>
+
+                </div>
+            </div>
+
+            <br /><br /><br />
 
 
+            <a href="#" id="s-helper-link" class="inline-link">
+                <i class="icon16 cheatsheet"></i><b><i>Шпаргалка</i></b>
+                <i class="icon10 darr no-overhanging"></i>
+            </a>
+            <br />
+            <div class="helper">
+                {literal}
+                    <br/>
+                    <b>Шаблоны для страницы товара:</b>
+                    <div>{$product} - объект(массив) товара</div>
+                    <div>{$product.name} - название товара</div>
+                    <div>{$product.summary} - краткое описание товара</div>
+                    <div>{$product.description} - полное описание товара</div>
+                    <div>{$product.price} - цена товара</div>
+                    <div>{$product.min_price} - минимальная цена товара</div>
+                    <div>{$product.max_price} - максимальная цена товара</div>
+                    <div>{$product.compare_price} - зачеркнутая цена товара</div>
+                    <div>{$product.count} - количество товара</div>
+                    <div>{$product.features} - массив характеристик товара</div>
+                    <div>{$category} - массив родительской категории</div>
+                    <div>{$category.name} - название родительской категории</div>
+                    <div>{$category.description} - описание родительской категории</div>
+                    <div>{$path} - массив категорий пути товара</div>
+                    <div>{$path[0]} - массив родительской категории(родитель 1-го уровня), аналогично {$category}</div>
+                    <div>{$path[0].name} - название родительской категории, аналогично {$category.name}</div>
+                    <div>{$path[0].description} - описание родительской категории, аналогично {$category.description}</div>
+                    <div>{$path[1]} - массив родительской категории 2-го уровня</div>
+                    <div>{$path[1].name} - название родительской категории 2-го уровня</div>
+                    <div>{$path[1].description} - описание родительской категории 2-го уровня</div>
+                    <div>{$path[2]} - массив родительской категории 3-го уровня</div>
+                    <div>{$path[2].name} - название родительской категории 3-го уровня</div>
+                    <div>{$path[2].description} - описание родительской категории 3-го уровня</div>
+                    <br/>
+                    <b>Шаблоны для страницы категории:</b>
+                    <div>{$category} - объект(массив) категории</div>
+                    <div>{$category.name} - название категории</div>
+                    <div>{$category.description} - описание категории</div>
+                    <div>{$path} - массив родительских категорий до данной категории</div>
+                    <div>{$path[0]} - массив родительской категории(родитель 1-го уровня)</div>
+                    <div>{$path[0].name} - название родительской категории</div>
+                    <div>{$path[0].description} - описание родительской категории</div>
+                    <br/>
+                    <b>Полезные функции:</b>
+                    <div>{shop_currency($product.price)} - Фоматирование цен осуществляется с помощью функции shop_currency()</div>
+                {/literal}
+            </div>
+            <br/>
+            <p>
+                <a target="_blank" href="http://wa-plugins.ru/blog/novosti/novaya-versiya-plagina-avtotegi-dlya-shop-script-5/">Статья про новые возможности плагина</a>
+            </p>
+            {foreach from=$meta_tags key=domain item=meta_type}
+                <h1>Поселение: {$domain}</h1>
 
-    
 
-    
-    <div class="field">
-        <div class="value submit">
-            <input type="submit" class="button green" value="Сохранить" />
-            <span id="plugins-settings-form-status" style="display:none">
-                <i style="vertical-align:middle" class="icon16 yes"></i> [`Saved`]
-            </span>
-        </div>
+                {foreach from=$meta_type key=type item=meta_tag}
+
+                    {if $type=='product'}
+                        <h2>Страница товара</h2>
+                    {elseif $type=='category'}
+                        <h2>Страница категории</h2>
+                    {/if}
+
+                    <div class="field">
+                        <div class="name">
+                            META Title
+                        </div>
+                        <div class="value">
+                            <textarea name="meta_tags[{$domain}][{$type}][meta_title]">{$meta_tag.meta_title|escape}</textarea>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="name">
+                            META Keywords
+                        </div>
+                        <div class="value">
+                            <textarea name="meta_tags[{$domain}][{$type}][meta_keywords]">{$meta_tag.meta_keywords|escape}</textarea>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="name">
+                            META Description
+                        </div>
+                        <div class="value">
+                            <textarea name="meta_tags[{$domain}][{$type}][meta_description]">{$meta_tag.meta_description|escape}</textarea>
+
+                        </div>
+                    </div>
+
+                    <br />
+                {/foreach}
+
+                <hr />
+            {/foreach}
+
+
+
+
+
+
+
+            <div class="field">
+                <div class="value submit">
+                    <input type="submit" class="button green" value="Сохранить" />
+                    <span id="plugins-settings-form-status" style="display:none">
+                        <i style="vertical-align:middle" class="icon16 yes"></i> [`Saved`]
+                    </span>
+                </div>
+            </div>
+        </form>
     </div>
-    </form>
 </div>
-</div>
-
+<script>
+    $('#s-helper-link').click(function () {
+        $('.helper').toggle('slow');
+        return false;
+    });
+</script>

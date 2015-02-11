@@ -1,4 +1,5 @@
 <?php
+
 $model = new waModel();
 $sql = "CREATE TABLE IF NOT EXISTS `shop_autotags` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -15,7 +16,7 @@ try {
     $model->query($sql);
 } catch (waDbException $e) {
     if (class_exists('waLog')) {
-        waLog::log(basename(__FILE__).': '.$e->getMessage(), 'shop-update.log');
+        waLog::log(basename(__FILE__) . ': ' . $e->getMessage(), 'shop-update.log');
     }
     throw $e;
 }

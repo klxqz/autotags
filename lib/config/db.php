@@ -1,4 +1,5 @@
 <?php
+
 return array(
     'shop_autotags' => array(
         'id' => array('int', 11, 'null' => 0, 'autoincrement' => 1),
