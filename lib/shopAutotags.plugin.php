@@ -83,7 +83,8 @@ class shopAutotagsPlugin extends shopPlugin {
 
         $category_model = new shopCategoryModel();
         $path = $category_model->getPath($category['id']);
-
+        $path = array_values($path);
+        
         $view = wa()->getView();
         $view->assign('category', $category);
         $view->assign('path', $path);
