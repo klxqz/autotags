@@ -2,116 +2,83 @@
 
 class shopAutotagsPlugin extends shopPlugin {
 
-    public function frontendProduct($product) {
+    private function event($name, $param = null) {
+        $result = array();
+        $engines = shopAutotags::getEngines();
+        foreach ($engines as $engine) {
+            $result[$engine->getType()] = $engine->event($name, $param);
+        }
+        return $result;
+    }
 
-        $this->replaceTpl('product', $product);
+    public function frontendProduct($product) {
+        if ($this->getSettings('status')) {
+            $this->event('frontendProduct', $product);
+        }
     }
 
     public function frontendCategory($category) {
-        $this->replaceTpl('category', $category);
-    }
-
-    protected function replaceTpl($type, $item) {
-        if (!$this->getSettings('status')) {
-            return false;
-        }
-
-        $domain = wa()->getRouting()->getDomain(null, true);
-        $route = wa()->getRouteUrl('shop/frontend');
-        $domain_route = $domain . $route . '*';
-
-        $meta_tags = array('meta_title', 'meta_keywords', 'meta_description');
-        $apply_templates = $this->getSettings('apply_templates');
-
-        $autotags_model = new shopAutotagsPluginModel();
-        $autotags = $autotags_model->getByField(array('domain' => $domain_route, 'type' => $type));
-
-        $vals = array();
-        foreach ($meta_tags as $meta_tag) {
-            $tpl = $autotags[$meta_tag];
-            $vals[$meta_tag] = $this->{$type . 'ReplaceTpl'}($tpl, $item, $meta_tag, $type, $domain_route);
-        }
-
-        if ($vals['meta_title'] && (!$item['meta_title'] || $apply_templates)) {
-            wa()->getResponse()->setTitle($vals['meta_title']);
-        }
-
-        if ($vals['meta_keywords'] && (!$item['meta_keywords'] || $apply_templates)) {
-            wa()->getResponse()->setMeta('keywords', $vals['meta_keywords']);
-        }
-
-        if ($vals['meta_description'] && (!$item['meta_description'] || $apply_templates)) {
-            wa()->getResponse()->setMeta('description', $vals['meta_description']);
+        if ($this->getSettings('status')) {
+            $this->event('frontendCategory', $category);
         }
     }
 
-    public function productReplaceTpl($tpl, $product, $meta_tag, $type, $domain) {
-        if (!$tpl) {
-            return false;
+    public function frontendHomepage() {
+        if ($this->getSettings('status')) {
+            $this->event('frontendHomepage');
         }
-        $filename = md5($domain) . '_' . $type . '_' . $meta_tag . '_' . md5($tpl) . '.html';
-        $temp_file = wa()->getCachePath('plugins/autotags/' . waLocale::transliterate($filename, 'en_US'));
-        $this->existsTempTpl($temp_file, $tpl);
-
-        $path = $this->getPath($product);
-
-        $category = null;
-        if ($product['category_id']) {
-            $category_model = new shopCategoryModel();
-            $category = $category_model->getById($product['category_id']);
-        }
-
-        $sku_id = $product['sku_id'];
-
-        $view = wa()->getView();
-        $view->assign('product', $product);
-        $view->assign('sku', $product->skus[$sku_id]);
-        $view->assign('category', $category);
-        $view->assign('path', $path);
-
-        $html = $view->fetch($temp_file);
-        return $html;
     }
 
-    public function categoryReplaceTpl($tpl, $category, $meta_tag, $type, $domain) {
-        if (!$tpl) {
-            return false;
+    public function frontendHead() {
+        if ($this->getSettings('status')) {
+            $this->event('frontendHead');
         }
-        $filename = md5($domain) . '_' . $type . '_' . $meta_tag . '_' . md5($tpl) . '.html';
-        $temp_file = wa()->getCachePath('plugins/autotags/' . waLocale::transliterate($filename, 'en_US'));
-        $this->existsTempTpl($temp_file, $tpl);
-
-        $category_model = new shopCategoryModel();
-        $path = $category_model->getPath($category['id']);
-        $path = array_values($path);
-        
-        $view = wa()->getView();
-        $view->assign('category', $category);
-        $view->assign('path', $path);
-
-        $html = $view->fetch($temp_file);
-        return $html;
     }
 
-    public function getPath(shopProduct $product) {
-        if (!$product['category_id']) {
-            return false;
-        }
-        $category_model = new shopCategoryModel();
-        $category = $category_model->getById($product['category_id']);
-        $path = $category_model->getPath($category['id']);
-        array_unshift($path, $category);
-        return $path;
-    }
+    public function backendCategoryDialog($category) {
+        if ($this->getSettings('status')) {
+            $html = '';
 
-    private function existsTempTpl($temp_file, $tpl) {
-        if (!file_exists($temp_file)) {
-            if ($f = @fopen($temp_file, 'w+')) {
-                fwrite($f, $tpl);
-                fclose($f);
-            } else {
-                throw new waException("Ошибка создания файла " . $temp_file);
+            $category_engine = new shopAutotagsCategoryEngine();
+            $html .= $category_engine->hookBackendCategoryDialog($category);
+
+            if ($this->getSettings('subcategories') || $this->getSettings('category_products')) {
+                $view = wa()->getView();
+                $view->assign(array(
+                    'plugin_name' => $this->getName(),
+                    'category' => $category,
+                    'route_hashs' => shopAutotags::getRouteHashs(),
+                ));
+                $template_path = wa()->getAppPath('plugins/autotags/templates/actions/backend/BackendCategoryDialog.html', 'shop');
+                $html .= $view->fetch($template_path);
             }
+            return $html;
+        }
+    }
+
+    public function categorySave($category) {
+        if ($this->getSettings('status') && ($this->getSettings('subcategories') || $this->getSettings('category_products'))) {
+            $post = waRequest::post();
+
+            $engines = shopAutotags::getEngines();
+            foreach ($engines as $engine) {
+                $engine->saveCategoryAutotags($category['id'], $post);
+            }
+
+            $this->event('categorySave', $category);
+        }
+    }
+
+    public function backendProductEdit($product) {
+        if ($this->getSettings('status')) {
+            $product_engine = new shopAutotagsProductEngine();
+            return $product_engine->hookBackendProductEdit($product);
+        }
+    }
+
+    public function productSave($params) {
+        if ($this->getSettings('status')) {
+            $this->event('productSave', $params);
         }
     }
 

@@ -1,5 +1,5 @@
 <style>
-    .helper{
+    .help-content{
         display: none;
     }
     .plugin-menu{
@@ -11,152 +11,266 @@
         float: left;
         margin-left: 10px;
     }
+
 </style>
 
 <ul class="plugin-menu">
-    <li><a target="_blank" href="http://www.webasyst.ru/store/plugin/shop/autotags/reviews/">Оставить отзыв о плагине</a></li>
-    <li><a href="mailto:support@wa-plugins.ru">Поддержка разработчика плагина</a></li>
-    <li><a target="_blank" href="http://wa-plugins.ru/">WA-PLUGINS.ru - сайт разработчика</a></li>
+    {*<li><a target="_blank" href="http://www.webasyst.ru/store/plugin/shop/autotags/reviews/"><i class="icon16 star"></i>Оставить отзыв о плагине</a></li>*}
+    <li><a href="mailto:support@wa-plugins.ru"><i class="icon16 ss pt hammer"></i>Поддержка</a></li>
+        {*<li><a target="_blank" href="http://wa-plugins.ru/"><i class="icon16 ss pt globe"></i>WA-PLUGINS.ru - сайт разработчика</a></li>*}
 </ul>
 
 <div class="block double-padded">
-    <h1>Автотеги</h1>
-    <div     class="fields form">
-        <form action = "?plugin=autotags&action=save" method="post" id="plugins-settings-form">
+    <h1>{$plugin_name}</h1>
+    <div class="fields form">
+        <form action = "?plugin=autotags&module=settings&action=save" method="post" id="plugins-settings-form">
             {$wa->csrf()}
 
-            <div class="field">
-                <div class="name">
-                    Статус
-                </div>
-                <div class="value">
-                    <select name="shop_autotags[status]">
-                        <option {if $settings.status == 1} selected="selected"{/if} value = "1">Включен</option>
-                        <option {if $settings.status == 0} selected="selected"{/if} value = "0">Выключен</option>
-                    </select>
-
-                </div>
-            </div>
-
-            <div class="field">
-                <div class="name">
-                    Применять шаблоны
-                </div>
-                <div class="value">
-                    <select name="shop_autotags[apply_templates]">
-                        <option {if $settings.apply_templates == 1} selected="selected"{/if} value = "1">Для всех мета-тегов</option>
-                        <option {if $settings.apply_templates == 0} selected="selected"{/if} value = "0">Только для незаполненных мета-тегов</option>
-                    </select>
-
+            <div class="field-group">
+                <div class="field">
+                    <div class="name">
+                        Статус плагина
+                    </div>
+                    <div class="value no-shift s-ibutton-checkbox">
+                        <input type="hidden" name="shop_autotags[status]" value="0">
+                        <input type="checkbox" id="ibutton-status" name="shop_autotags[status]" value="1"{if $settings.status} checked{/if}>
+                    </div>
                 </div>
             </div>
 
-            <br /><br /><br />
+            <div class="field-group"{if !$settings.status} style="display:none"{/if}>
+                <div class="field">
+                    <div class="name">
+                        Формирование правил для подкатегорий
+                    </div>
+                    <div class="value no-shift s-ibutton-checkbox">
+                        <input type="hidden" name="shop_autotags[subcategories]" value="0">
+                        <input type="checkbox" class="ibutton" name="shop_autotags[subcategories]" value="1"{if $settings.subcategories|default:0} checked{/if}>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="name">
+                        Формирование правил для товаров в выбранной категории
+                    </div>
+                    <div class="value no-shift s-ibutton-checkbox">
+                        <input type="hidden" name="shop_autotags[category_products]" value="0">
+                        <input type="checkbox" class="ibutton" name="shop_autotags[category_products]" value="1"{if $settings.category_products|default:0} checked{/if}>
+                    </div>
+                </div>
+            </div>
 
+            <div class="field-group"{if !$settings.status} style="display:none"{/if}>
+                <div class="field">
+                    <div class="name">
+                        Выберите поселение
+                    </div>
+                    <div class="value">
+                        <select name="route_hash" id="route-selector">
+                            <option value="0">Общие шаблоны для всех поселений</option>
+                            {foreach $route_hashs as $route_url => $route_hash}
+                                <option value="{$route_hash}">{$route_url}</option>
+                            {/foreach}
+                        </select>
 
-            <a href="#" id="s-helper-link" class="inline-link">
-                <i class="icon16 cheatsheet"></i><b><i>Шпаргалка</i></b>
-                <i class="icon10 darr no-overhanging"></i>
-            </a>
-            <br />
-            <div class="helper">
+                    </div>
+                </div>
+            </div>
+
+            <div class="route-container"{if !$settings.status} style="display:none"{/if}>
+
+            </div>
+
+            <div class="field-group"{if !$settings.status} style="display:none"{/if}>
                 {literal}
-                    <br/>
-                    <b>Шаблоны для страницы товара:</b>
-                    <div>{$product} - объект(массив) товара</div>
-                    <div>{$product.name} - название товара</div>
-                    <div>{$product.summary} - краткое описание товара</div>
-                    <div>{$product.description} - полное описание товара</div>
-                    <div>{$product.price} - цена товара</div>
-                    <div>{$product.min_price} - минимальная цена товара</div>
-                    <div>{$product.max_price} - максимальная цена товара</div>
-                    <div>{$product.compare_price} - зачеркнутая цена товара</div>
-                    <div>{$product.count} - количество товара</div>
-                    <div>{$product.features} - массив характеристик товара</div>
-                    <div>{$category} - массив родительской категории</div>
-                    <div>{$category.name} - название родительской категории</div>
-                    <div>{$category.description} - описание родительской категории</div>
-                    <div>{$path} - массив категорий пути товара</div>
-                    <div>{$path[0]} - массив родительской категории(родитель 1-го уровня), аналогично {$category}</div>
-                    <div>{$path[0].name} - название родительской категории, аналогично {$category.name}</div>
-                    <div>{$path[0].description} - описание родительской категории, аналогично {$category.description}</div>
-                    <div>{$path[1]} - массив родительской категории 2-го уровня</div>
-                    <div>{$path[1].name} - название родительской категории 2-го уровня</div>
-                    <div>{$path[1].description} - описание родительской категории 2-го уровня</div>
-                    <div>{$path[2]} - массив родительской категории 3-го уровня</div>
-                    <div>{$path[2].name} - название родительской категории 3-го уровня</div>
-                    <div>{$path[2].description} - описание родительской категории 3-го уровня</div>
-                    <br/>
-                    <b>Шаблоны для страницы категории:</b>
-                    <div>{$category} - объект(массив) категории</div>
-                    <div>{$category.name} - название категории</div>
-                    <div>{$category.description} - описание категории</div>
-                    <div>{$path} - массив родительских категорий до данной категории</div>
-                    <div>{$path[0]} - массив родительской категории(родитель 1-го уровня)</div>
-                    <div>{$path[0].name} - название родительской категории</div>
-                    <div>{$path[0].description} - описание родительской категории</div>
-                    <br/>
-                    <b>Полезные функции:</b>
-                    <div>{shop_currency($product.price)} - Фоматирование цен осуществляется с помощью функции shop_currency()</div>
+                    <div class="field">
+                        <div class="value">
+                            <div class="block half-padded">
+                                <ul class="menu-h with-icons">
+                                    <li><a class="inline-link helper-link" href="#"><i class="icon16 script"></i><b><i>Шпаргалка</i></b><i class="icon10 darr-tiny"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="value help-content">
+                            <div class="block s-cheatsheet">
+
+                                <div class="fields">
+                                    <h3 style="padding: 10px;">Некоторые системные переменные</h3>
+                                    <div class="field">
+                                        <div class="name bold">
+                                            {$wa->get("key")}
+                                        </div>
+                                        <div class="value no-shift">
+                                            Возаращает значение GET-параметра (аналогично $_GET["key"] в PHP)
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <div class="name bold">
+                                            {$wa->post("key")}
+                                        </div>
+                                        <div class="value no-shift">
+                                            Возвращает значение POST-параметра (аналогично $_POST["key"] в PHP)
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <div class="name bold">
+                                            {$wa->server("key")}
+                                        </div>
+                                        <div class="value no-shift">
+                                            Возвращает значение параметра массива SERVER (аналогично $_SERVER["key"] в PHP)
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <div class="name bold">
+                                            {$wa->session("key")}
+                                        </div>
+                                        <div class="value no-shift">
+                                            Возвращает значение переменной сессии SESSION (аналогично $_SESSION["key"] в PHP)
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <div class="name bold">
+                                            {$wa->currentUrl(bool $absolute)}
+                                        </div>
+                                        <div class="value no-shift">
+                                            Возвращает URL текущей страницы (абсолютный либо относительный)
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <div class="name bold">
+                                            {$wa->domainUrl()}
+                                        </div>
+                                        <div class="value no-shift">
+                                            Возвращает корневой URL этого домена (абсолютный)
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <div class="name bold">
+                                            {$wa->globals("key")}
+                                        </div>
+                                        <div class="value no-shift">
+                                            Возвращает значение глобальной переменной по ключу key. Массив глобальных переменных изначально пуст и может использоваться произвольным образом
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <div class="name bold">
+                                            {$wa->isMobile()}
+                                        </div>
+                                        <div class="value no-shift">
+                                            Возвращает true или false в зависимости от того, использует ли пользователь в данный момент мобильное multi-touch устройство (iPhone, Android и пр.) или нет; если переменная сессии, содержащая тип версии сайта (мобильный или стандартный), отсутствует, то используется информация из заголовков User Agent
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <div class="name bold">
+                                            {$wa->locale()}
+                                        </div>
+                                        <div class="value no-shift">
+                                            Возвращает языковую локаль пользователя, например, en_US, ru_RU. Если пользователь авторизован, информация о локали извлекается из приложения «Контакты»; в противном случае определяется автоматически.
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <div class="name bold">
+                                            {$wa->user("field")}
+                                        </div>
+                                        <div class="value no-shift">
+                                            Возвращает массив с данными авторизованного пользователя из соответствующей записи приложения «Контакты». Если указан необязательный параметр "field" (string), то возвращается содержимое конкретного поля записи о контакте. Если пользователь не авторизован, функция возвращает false
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <div class="name bold">
+                                            {$wa->userAgent("key")}
+                                        </div>
+                                        <div class="value no-shift">
+                                            Возвращает информацию User Agent по указанному параметру key:<br/>
+                                            — platform: название системной платформы устройства пользователя, например, windows, mac, linux, ios, android, blackberry;<br/>
+                                            — "isMobile": основываясь на содержимом заголовков User Agent, возвращает true или false в зависимости от того, использует ли пользователь в данный момент мобильное multi-touch устройство (iPhone, Android и пр.) или нет;
+                                        </div>
+                                    </div>
+
+                                    <div class="field">
+                                        <div class="name bold">
+                                            {time()}
+                                        </div>
+                                        <div class="value no-shift">
+                                            Отображает текущую метку времени UNIX.
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <div class="name bold">
+                                            {time()|wa_datetime:$format}
+                                        </div>
+                                        <div class="value no-shift">
+                                            Отображает время в удобном для чтения виде. Доступные значения $format: monthdate, date, dtime, datetime, fulldatetime, time, fulltime, humandate, humandatetime.
+                                        </div>
+                                    </div>
+
+                                    <h3 style="padding: 10px;">Некоторые конструкции шаблонизатора</h3>
+
+                                    <div class="field">
+                                        <div class="name bold">
+                                            {$foo}
+                                        </div>
+                                        <div class="value no-shift">
+                                            Отображает переменную (не подходит для массивов и объектов)
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <div class="name bold">
+                                            {$foo[4]}
+                                        </div>
+                                        <div class="value no-shift">
+                                            Отображает 5-й элемент массива, считая с нулевого индекса
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <div class="name bold">
+                                            {$foo.bar}
+                                        </div>
+                                        <div class="value no-shift">
+                                            Отображает значение ключа массива «bar» аналогично $foo["bar"] в PHP.
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <div class="name bold">
+                                            {$foo|print_r}
+                                        </div>
+                                        <div class="value no-shift">
+                                            Отображает подробную информацию о структуре переменной, массива или объекта
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <div class="name bold">
+                                            {$foo|escape}
+                                        </div>
+                                        <div class="value no-shift">
+                                            Экранирует переменную для безопасного отображения в HTML-коде
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <div class="name bold">
+                                            {if}...{else}...{/if}
+                                        </div>
+                                        <div class="value no-shift">
+                                            Условие. Аналогично конструкции if в PHP
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <div class="name bold">
+                                            {foreach from=$a key=k item=v}...{foreachelse}...{/foreach}
+                                        </div>
+                                        <div class="value no-shift">
+                                            Используется для перебора элементов в массивах данных
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="clear-both"></div>
+                            </div>
+                        </div>
+                    </div>
                 {/literal}
             </div>
-            <br/>
-            <p>
-                <a target="_blank" href="http://wa-plugins.ru/blog/novosti/novaya-versiya-plagina-avtotegi-dlya-shop-script-5/">Статья про новые возможности плагина</a>
-            </p>
-            {foreach from=$meta_tags key=domain item=meta_type}
-                <h1>Поселение: {$domain}</h1>
 
-
-                {foreach from=$meta_type key=type item=meta_tag}
-
-                    {if $type=='product'}
-                        <h2>Страница товара</h2>
-                    {elseif $type=='category'}
-                        <h2>Страница категории</h2>
-                    {/if}
-
-                    <div class="field">
-                        <div class="name">
-                            META Title
-                        </div>
-                        <div class="value">
-                            <textarea name="meta_tags[{$domain}][{$type}][meta_title]">{$meta_tag.meta_title|escape}</textarea>
-                        </div>
-                    </div>
-
-                    <div class="field">
-                        <div class="name">
-                            META Keywords
-                        </div>
-                        <div class="value">
-                            <textarea name="meta_tags[{$domain}][{$type}][meta_keywords]">{$meta_tag.meta_keywords|escape}</textarea>
-                        </div>
-                    </div>
-
-                    <div class="field">
-                        <div class="name">
-                            META Description
-                        </div>
-                        <div class="value">
-                            <textarea name="meta_tags[{$domain}][{$type}][meta_description]">{$meta_tag.meta_description|escape}</textarea>
-
-                        </div>
-                    </div>
-
-                    <br />
-                {/foreach}
-
-                <hr />
-            {/foreach}
-
-
-
-
-
-
-
-            <div class="field">
+            <div class="field"{if !$settings.status} style="display:none"{/if}>
                 <div class="value submit">
                     <input type="submit" class="button green" value="Сохранить" />
                     <span id="plugins-settings-form-status" style="display:none">
@@ -167,9 +281,23 @@
         </form>
     </div>
 </div>
-<script>
-    $('#s-helper-link').click(function () {
-        $('.helper').toggle('slow');
-        return false;
+
+<script type="text/javascript" src="{$wa_url}wa-content/js/ace/ace.js"></script>
+<script type="text/javascript" src="{$wa_url}wa-content/js/elrte/elrte.min.js"></script>
+<script type="text/javascript" src="{$wa_url}wa-content/js/elrte/elrte-wa.js"></script>
+<script type="text/javascript" src="{$wa_url}wa-content/js/elrte/i18n/elrte.ru.js"></script>
+<script type="text/javascript" src="{$wa_url}wa-content/js/jquery-wa/wa.elrte.ace.js"></script>
+<link type="text/css" rel="stylesheet" href="{$wa_url}wa-content/js/redactor/redactor.css">
+<script src="{$wa_url}wa-content/js/redactor/redactor.min.js"></script>
+<script src="{$wa_url}wa-content/js/redactor/ru.js"></script>
+<script src="{$wa_url}wa-content/js/jquery-wa/editor.js?v{$wa->version()}"></script>
+
+
+<script type="text/javascript" src="{$wa_app_static_url}plugins/autotags/js/settings.js?{$wa->version()}"></script>
+<script type="text/javascript">
+    var wa_app = '{$wa_url}';
+    var wa_url = '{$wa_url}';
+    $(function () {
+        $.autotags_settings.init();
     });
 </script>

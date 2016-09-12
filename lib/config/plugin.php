@@ -1,16 +1,22 @@
 <?php
 
 return array(
-    'name' => 'Автотеги',
+    'name' => 'SEO-Теги',
     'description' => 'Автоматическое заполнение мета-тегов',
     'vendor' => '985310',
-    'version' => '2.0.3',
+    'version' => '3.0.0',
     'img' => 'img/autotags.png',
     'shop_settings' => true,
     'frontend' => true,
     'handlers' => array(
+        'frontend_homepage' => 'frontendHomepage',
         'frontend_product' => 'frontendProduct',
         'frontend_category' => 'frontendCategory',
+        'frontend_head' => 'frontendHead',
+        'backend_category_dialog' => 'backendCategoryDialog',
+        'category_save' => 'categorySave',
+        'backend_product_edit' => 'backendProductEdit',
+        'product_save' => 'productSave',
     ),
 );
 //EOF
