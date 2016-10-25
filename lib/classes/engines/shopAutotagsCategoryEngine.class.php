@@ -38,7 +38,7 @@ class shopAutotagsCategoryEngine extends shopAutotagsEngine {
         );
         $meta_tags = $this->getTemplates($vars);
 
-        $this->setMeta($meta_tags, $vars);
+        $this->setMeta($meta_tags, $vars, $category);
 
         if (empty($category['description']) && !empty($meta_tags['description'])) {
             $view = wa()->getView();

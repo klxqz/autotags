@@ -186,21 +186,21 @@ abstract class shopAutotagsEngine {
         return $meta_tags;
     }
 
-    protected function setMeta($meta_tags = array(), $vars = array()) {
+    protected function setMeta($meta_tags = array(), $vars = array(), $item = null) {
         $view = wa()->getView();
         if ($vars) {
             $view->assign($vars);
         }
 
-        if (!empty($meta_tags['meta_title'])) {
+        if (empty($item['meta_title']) && !empty($meta_tags['meta_title'])) {
             $meta_title = $view->fetch('string:' . $meta_tags['meta_title']);
             wa()->getResponse()->setTitle($meta_title);
         }
-        if (!empty($meta_tags['meta_keywords'])) {
+        if (empty($item['meta_keywords']) && !empty($meta_tags['meta_keywords'])) {
             $meta_keywords = $view->fetch('string:' . $meta_tags['meta_keywords']);
             wa()->getResponse()->setMeta('keywords', $meta_keywords);
         }
-        if (!empty($meta_tags['meta_description'])) {
+        if (empty($item['meta_description']) && !empty($meta_tags['meta_description'])) {
             $meta_description = $view->fetch('string:' . $meta_tags['meta_description']);
             wa()->getResponse()->setMeta('description', $meta_description);
         }

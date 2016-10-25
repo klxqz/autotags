@@ -69,8 +69,8 @@ try {
                 `type` varchar(32) NOT NULL,
                 `fields` text,
                 `enabled` tinyint(1) NOT NULL,
-                KEY `product_id` (`product_id`),
-                KEY `route_hash` (`route_hash`)
+                KEY `category_id` (`category_id`),
+                KEY `route_hash` (`route_hash`),
                 KEY `type` (`type`)
               ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
     $model->query($sql);

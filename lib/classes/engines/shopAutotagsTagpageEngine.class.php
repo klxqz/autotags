@@ -17,7 +17,7 @@ class shopAutotagsTagpageEngine extends shopAutotagsEngine {
                 'page_number' => waRequest::get('page'),
             );
             $meta_tags = $this->getTemplates($vars);
-            $this->setMeta($meta_tags, $vars);
+            $this->setMeta($meta_tags, $vars, $tag);
         }
     }
 

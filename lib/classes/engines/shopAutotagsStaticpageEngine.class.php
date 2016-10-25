@@ -18,7 +18,7 @@ class shopAutotagsStaticpageEngine extends shopAutotagsEngine {
                 'page' => $page,
             );
             $meta_tags = $this->getTemplates($vars);
-            $this->setMeta($meta_tags, $vars);
+            $this->setMeta($meta_tags, $vars, $page);
         }
     }
 

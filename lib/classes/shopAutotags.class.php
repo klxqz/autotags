@@ -10,7 +10,7 @@ class shopAutotags {
         'tagpage',
     );
 
-    public function sort($a, $b) {
+    public static function sort($a, $b) {
         return array_search($a->getType(), self::$sort) > array_search($b->getType(), self::$sort) ? 1 : -1;
     }
 

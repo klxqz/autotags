@@ -53,7 +53,7 @@ class shopAutotagsProductEngine extends shopAutotagsEngine {
         );
 
         $meta_tags = $this->getTemplates($vars);
-        $this->setMeta($meta_tags, $vars);
+        $this->setMeta($meta_tags, $vars, $product);
 
         $autotags_product_model = new shopAutotagsPluginProductModel();
         $autotags_product = $autotags_product_model->getByField(array('route_hash' => shopAutotags::getCurrentRouteHash(), 'product_id' => $product['id']));
