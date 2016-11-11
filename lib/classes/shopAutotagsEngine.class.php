@@ -176,10 +176,10 @@ abstract class shopAutotagsEngine {
         }
 
         //Если не найдены теги для категорий, тогда берем из общих настроек
-        if (!$meta_tags) {
+        if (!$meta_tags && self::getAutotags($route_hash, 'enabled')) {
             $meta_tags = self::getAutotags($route_hash, 'fields');
         }
-        if (!$meta_tags) {
+        if (!$meta_tags && self::getAutotags(0, 'enabled')) {
             //$route_hash = 0
             $meta_tags = self::getAutotags(0, 'fields');
         }
@@ -192,15 +192,15 @@ abstract class shopAutotagsEngine {
             $view->assign($vars);
         }
 
-        if (empty($item['meta_title']) && !empty($meta_tags['meta_title'])) {
+        if ((empty($item['meta_title']) || !empty($meta_tags['override'])) && !empty($meta_tags['meta_title'])) {
             $meta_title = $view->fetch('string:' . $meta_tags['meta_title']);
             wa()->getResponse()->setTitle($meta_title);
         }
-        if (empty($item['meta_keywords']) && !empty($meta_tags['meta_keywords'])) {
+        if ((empty($item['meta_keywords']) || !empty($meta_tags['override'])) && !empty($meta_tags['meta_keywords'])) {
             $meta_keywords = $view->fetch('string:' . $meta_tags['meta_keywords']);
             wa()->getResponse()->setMeta('keywords', $meta_keywords);
         }
-        if (empty($item['meta_description']) && !empty($meta_tags['meta_description'])) {
+        if ((empty($item['meta_description']) || !empty($meta_tags['override'])) && !empty($meta_tags['meta_description'])) {
             $meta_description = $view->fetch('string:' . $meta_tags['meta_description']);
             wa()->getResponse()->setMeta('description', $meta_description);
         }
