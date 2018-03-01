@@ -74,7 +74,7 @@ class shopAutotagsProductEngine extends shopAutotagsEngine {
     }
 
     public function hookBackendProductEdit($product) {
-        $template = wa()->getAppPath('plugins/autotags/templates/engines/ProductEdit/' . $this->type . 'ProductEditFields.html', 'shop');
+        $template = wa()->getAppPath('plugins/autotags/templates/engines/BackendProductEdit/' . $this->type . 'ProductEditFields.html', 'shop');
         if (file_exists($template)) {
             $view = wa()->getView();
             $view->assign(array(
