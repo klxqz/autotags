@@ -20,7 +20,7 @@ class shopAutotagsProductEngine extends shopAutotagsEngine {
         $category = $category_model->getById($product['category_id']);
 
         $path = $category_model->getPath($category['id']);
-        $parent_categories = array_values($path);
+        $parent_categories = array_reverse(array_values($path));
         $parent_categories[] = $category;
 
         $parent_category_names = array();

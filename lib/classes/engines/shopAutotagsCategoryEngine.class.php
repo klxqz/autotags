@@ -15,7 +15,7 @@ class shopAutotagsCategoryEngine extends shopAutotagsEngine {
     public function hookFrontendCategory($category) {
         $category_model = new shopCategoryModel();
         $path = $category_model->getPath($category['id']);
-        $parent_categories = array_values($path);
+        $parent_categories = array_reverse(array_values($path));
         $parent_category_names = array();
         if ($parent_categories) {
             foreach ($parent_categories as $item) {
