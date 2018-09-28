@@ -66,7 +66,7 @@ class shopAutotagsProductEngine extends shopAutotagsEngine {
             $view = wa()->getView();
             $product['description'] = $view->fetch('string:' . $autotags_product['description']);
             $view->assign('product', $product);
-        } elseif (empty($product['description']) && !empty($meta_tags['description'])) {
+        } elseif ((empty($product['description']) || !empty($meta_tags['override'])) && !empty($meta_tags['description'])) {
             $view = wa()->getView();
             $product['description'] = $view->fetch('string:' . $meta_tags['description']);
             $view->assign('product', $product);

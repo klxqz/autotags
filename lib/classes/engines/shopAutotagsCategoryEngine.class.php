@@ -40,7 +40,7 @@ class shopAutotagsCategoryEngine extends shopAutotagsEngine {
 
         $this->setMeta($meta_tags, $vars, $category);
 
-        if (empty($category['description']) && !empty($meta_tags['description'])) {
+        if ((empty($category['description']) || !empty($meta_tags['override'])) && !empty($meta_tags['description'])) {
             $view = wa()->getView();
             $category['description'] = $view->fetch('string:' . $meta_tags['description']);
             $view->assign('category', $category);

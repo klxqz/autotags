@@ -4,7 +4,7 @@ return array(
     'name' => 'SEO-Теги',
     'description' => 'Автоматическое заполнение мета-тегов',
     'vendor' => '985310',
-    'version' => '3.1.3',
+    'version' => '3.1.4',
     'img' => 'img/autotags.png',
     'shop_settings' => true,
     'frontend' => true,
