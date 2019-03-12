@@ -1,6 +1,7 @@
 <?php
 
-class shopAutotagsCategoryEngine extends shopAutotagsEngine {
+class shopAutotagsCategoryEngine extends shopAutotagsEngine
+{
 
     protected $type = 'category';
     protected $name = 'Страница категории';
@@ -12,7 +13,8 @@ class shopAutotagsCategoryEngine extends shopAutotagsEngine {
         'description' => 'Если описание категории не заполнено, то оно будет формироваться по данному шаблону',
     );
 
-    public function hookFrontendCategory($category) {
+    public function hookFrontendCategory($category)
+    {
         $category_model = new shopCategoryModel();
         $path = $category_model->getPath($category['id']);
         $parent_categories = array_reverse(array_values($path));
@@ -47,7 +49,8 @@ class shopAutotagsCategoryEngine extends shopAutotagsEngine {
         }
     }
 
-    public function hookBackendCategoryDialog($category) {
+    public function hookBackendCategoryDialog($category)
+    {
         return '<div class="field">
                     <div class="name">
                         <strong>SEO Название</strong>
@@ -58,28 +61,34 @@ class shopAutotagsCategoryEngine extends shopAutotagsEngine {
                 </div>';
     }
 
-    public function hookCategorySave($category) {
+    public function hookCategorySave($category)
+    {
         $category_model = new shopCategoryModel();
-        $category_model->updateById($category['id'], array('autotags_seo_name' => waRequest::post('autotags_seo_name')));
+        if ($autotags_seo_name = waRequest::post('autotags_seo_name')) {
+            $category_model->updateById($category['id'], array('autotags_seo_name' => $autotags_seo_name));
+        }
+
     }
 
-    public function hookInstall() {
+    public function hookInstall()
+    {
         try {
             $model = new waModel();
             $sql = 'ALTER TABLE `shop_category` ADD `autotags_seo_name` VARCHAR( 255 ) NULL AFTER `name`';
             $model->query($sql);
         } catch (waDbException $ex) {
-            
+
         }
     }
 
-    public function hookUninstall() {
+    public function hookUninstall()
+    {
         try {
             $model = new waModel();
             $sql = 'ALTER TABLE `shop_category` DROP `autotags_seo_name`';
             $model->query($sql);
         } catch (waDbException $ex) {
-            
+
         }
     }
 
